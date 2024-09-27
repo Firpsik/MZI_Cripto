@@ -22,7 +22,7 @@ auth_composit = "александрпушкиневгенийонегин"
 k = 6
 en_text = caesar_decipher(auth_composit, k)
 print(f"Зашифрованный текст: {text}")
-print(f"Расшифрованный текст: {caesar_decipher(text, k)}")
+print(f"Расшифрованный текст (при k = {k}): {caesar_decipher(text, k)}")
 print(f"Автор и произведение: {auth_composit}")
 print(f"Зашифрованный автор и произведение: {caesar_decipher(auth_composit, k)}")
 
