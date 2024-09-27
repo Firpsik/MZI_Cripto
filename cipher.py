@@ -7,7 +7,7 @@ table = {
 
 reverse_table = {v: k for k, v in table.items()}
 
-def caesar_cipher(text, shift):
+def caesar_decipher(text, shift):
     encrypted_text = []
     for char in text:
         if char in table:
@@ -17,15 +17,40 @@ def caesar_cipher(text, shift):
             encrypted_text.append(char)
     return ''.join(encrypted_text)
 
-text = input("Введите строку для шифрования: ").lower()
+text = "извлитевлцьиезъвдъжязцлмвпввйкибъеяювйеъжязцзялмиецкъбевсзхжяалиыиг"
+auth_composit = "александрпушкиневгенийонегин"
+k = 6
+en_text = caesar_decipher(auth_composit, k)
+print(f"Зашифрованный текст: {text}")
+print(f"Расшифрованный текст: {caesar_decipher(text, k)}")
+print(f"Автор и произведение: {auth_composit}")
+print(f"Зашифрованный автор и произведение: {caesar_decipher(auth_composit, k)}")
 
 while True:
-    k = input("Введите сдвиг (k): (q для выхода) ")
-    if k == "q":
+    print("\nВыберите действие:")
+    print("1. Расшифровать текст")
+    print("2. Зашифровать текст")
+    print("q. Выйти")
+    choice = input("Ваш выбор: ")
+
+    if choice == "q":
         break
-    if k.isdigit():
-        k = int(k)
-        result = caesar_cipher(text, k)
-        print(f"Зашифрованная строка: {result}")
-    else:
-        print("Ошибка: сдвиг должен быть числом или 'q' для выхода.")
+    if choice != "1" and choice != "2":
+        print("Ошибка: неверный ввод. Выберите 1, 2 или 'q'.")
+        continue
+
+    text_to_cipher = input("Введите текст для обработки: ").lower()
+    k = input("Введите сдвиг (k): ")
+
+    if not k.isdigit():
+        print("Ошибка: сдвиг должен быть числом.")
+        continue
+
+    k = int(k)
+    
+    if choice == "1":
+        result = caesar_decipher(text_to_cipher, k)
+        print(f"Расшифрованный текст: {result}")
+    elif choice == "2":
+        result = caesar_decipher(text_to_cipher, -1*k)
+        print(f"Зашифрованный текст: {result}")
