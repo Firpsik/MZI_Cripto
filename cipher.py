@@ -1,30 +1,22 @@
-table = {
-    'а': 0, 'б': 1, 'в': 2, 'г': 3, 'д': 4, 'е': 5, 'ё': 5, 'ж': 6, 'з': 7,
-    'и': 8, 'й': 9, 'к': 10, 'л': 11, 'м': 12, 'н': 13, 'о': 14, 'п': 15,
-    'р': 16, 'с': 17, 'т': 18, 'у': 19, 'ф': 20, 'х': 21, 'ц': 22, 'ч': 23,
-    'ш': 24, 'щ': 25, 'ъ': 26, 'ы': 27, 'ь': 28, 'э': 29, 'ю': 30, 'я': 31
-}
+import my_module as mod
+import os
 
-reverse_table = {v: k for k, v in table.items()}
+init_data = mod.open_file("init")
+text = init_data[0].strip()
+auth_composit = init_data[1].strip()
+k = int(init_data[2].strip())
 
-def caesar_decipher(text, shift):
-    encrypted_text = []
-    for char in text:
-        if char in table:
-            shifted_code = (table[char] + shift) % 32
-            encrypted_text.append(reverse_table[shifted_code])
-        else:
-            encrypted_text.append(char)
-    return ''.join(encrypted_text)
+en_text = mod.caesar_cipher(auth_composit, k)
 
-text = "извлитевлцьиезъвдъжязцлмвпввйкибъеяювйеъжязцзялмиецкъбевсзхжяалиыиг"
-auth_composit = "александрпушкиневгенийонегин"
-k = 6
-en_text = caesar_decipher(auth_composit, k)
-print(f"Зашифрованный текст: {text}")
-print(f"Расшифрованный текст (при k = {k}): {caesar_decipher(text, k)}")
-print(f"Автор и произведение: {auth_composit}")
-print(f"Зашифрованный автор и произведение: {caesar_decipher(auth_composit, k)}")
+init_output = (
+    f"ШИФР-ТЕКСТ (ШТ): {text}\n"
+    f"РАСШИФРОВАННЫЙ ТЕКСТ (ОТ): {mod.caesar_cipher(text, k)}\n"
+    f"КЛЮЧ: {k}\n"
+    f"АВТОР И ПРОИЗВЕДЕНИЕ (ОТ): {auth_composit}\n"
+    f"ЗАШИФРОВАННЫЕ ФАМИЛИЯ И НАЗВАНИЕ (ШТ): {mod.caesar_cipher(auth_composit, k)}"
+)
+mod.save_file(init_output, "processing", "w")
+print(f"Начальные данные сохранены в файл 'processing.txt'.")
 
 while True:
     print("\nВыберите действие:")
@@ -36,21 +28,49 @@ while True:
     if choice == "q":
         break
     if choice != "1" and choice != "2":
-        print("Ошибка: неверный ввод. Выберите 1, 2 или 'q'.")
+        os.system('cls')
+        print("неверный ввод. Выберите 1, 2 или 'q'.")
         continue
 
-    text_to_cipher = input("Введите текст для обработки: ").lower()
-    k = input("Введите сдвиг (k): ")
-
-    if not k.isdigit():
-        print("Ошибка: сдвиг должен быть числом.")
+    f_or_t = input("Введите 'ф', если текст из файла, или 'т' для ввода текста вручную: ").lower()
+    if f_or_t != "ф" and f_or_t != "т":
+        mod.error_message("неверный ввод. Выберите 'ф' или 'т'.")
         continue
 
-    k = int(k)
-    
+    if f_or_t == "ф":
+        file_name = input("Введите название файла: ")
+        try:
+            user_file = mod.open_file(file_name)
+            text_to_cipher = user_file[0].strip()
+            k = user_file[1].strip()
+            if not k.isdigit():
+                mod.error_message("сдвиг должен быть числом.")
+                continue
+            k = int(k)
+        except OSError:
+            mod.error_message("файла не существует.")
+            continue
+
+    if f_or_t == "т":
+        text_to_cipher = input("Введите текст для обработки: ").lower()
+        k = input("Введите сдвиг (k): ")
+        if not k.isdigit():
+            mod.error_message("сдвиг должен быть числом.")
+            continue
+        k = int(k)
+
     if choice == "1":
-        result = caesar_decipher(text_to_cipher, k)
-        print(f"Расшифрованный текст: {result}")
+        result = mod.caesar_cipher(text_to_cipher, k)
     elif choice == "2":
-        result = caesar_decipher(text_to_cipher, -1*k)
-        print(f"Зашифрованный текст: {result}")
+        result = mod.caesar_cipher(text_to_cipher, -1 * k)
+
+    print(result)
+
+    save_choice = input("Хотите сохранить результат в файл? (да/нет): ").lower()
+    if save_choice == "да":
+        mod.save_file(result, "result")
+        os.system('cls')
+        print("Результат сохранен в файл 'result.txt'.")
+    else:
+        os.system('cls')
+        print("Результат не был сохранен.")
