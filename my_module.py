@@ -5,7 +5,7 @@ def caesar_cipher(text, shift):
     encrypted_text = []
     for char in text:
         if char in d.table:
-            shifted_code = (d.table[char] + shift) % 32
+            shifted_code = (d.table[char] - shift) % 32
             encrypted_text.append(d.reverse_table[shifted_code])
         else:
             encrypted_text.append(char)

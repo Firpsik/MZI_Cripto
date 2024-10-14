@@ -13,10 +13,14 @@ init_output = (
     f"РАСШИФРОВАННЫЙ ТЕКСТ (ОТ): {mod.caesar_cipher(text, k)}\n"
     f"КЛЮЧ: {k}\n"
     f"АВТОР И ПРОИЗВЕДЕНИЕ (ОТ): {auth_composit}\n"
-    f"ЗАШИФРОВАННЫЕ ФАМИЛИЯ И НАЗВАНИЕ (ШТ): {mod.caesar_cipher(auth_composit, k)}"
+    f"ЗАШИФРОВАННЫЕ ФАМИЛИЯ И НАЗВАНИЕ (ШТ): {mod.caesar_cipher(auth_composit, -k)}"
 )
 mod.save_file(init_output, "processing", "w")
 print(f"Начальные данные сохранены в файл 'processing.txt'.")
+
+for k in range(1,32):
+    mod.save_file(f"k={k}: {mod.caesar_cipher(text, k)}", "full")
+print(f"Полный перебор сохранён в файл 'full.txt'.")
 
 while True:
     print("\nВыберите действие:")
